@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  ANDROID_HOME: /opt/android-sdk
+  ANDROID_HOME: /usr/local/lib/android/sdk
 
 jobs:
   build:
@@ -21,7 +21,7 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Install Android SDK (cmdline-tools)
+      - name: Install Android SDK packages (cmdline-tools)
         run: |
           mkdir -p $ANDROID_HOME/cmdline-tools
           curl -fsSL -o ct.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
