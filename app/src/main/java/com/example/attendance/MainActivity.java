@@ -37,6 +37,9 @@ public class MainActivity extends AppCompatActivity {
         ws.setCacheMode(WebSettings.LOAD_DEFAULT);
         ws.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
 
+        // 自定义 UA 标记：网页据此识别“是否处于本 App 内”，以隐藏“下载App”入口
+        ws.setUserAgentString(ws.getUserAgentString() + " AttendanceAppAPK/1.0");
+
         // 所有链接/跳转都在本 WebView 内打开
         webView.setWebViewClient(new WebViewClient() {
             @Override
