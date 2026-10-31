@@ -68,13 +68,17 @@ public class MainActivity extends AppCompatActivity {
         webView.loadUrl(getString(R.string.web_url));
     }
 
-    // 返回键：先退网页历史，再退出App
+    // 返回键：先关助手面板，再退网页历史，最后才退出App
     @Override
     public void onBackPressed() {
-        if (webView.canGoBack()) {
-            webView.goBack();
-        } else {
-            super.onBackPressed();
-        }
+        webView.evaluateJavascript(
+            "(function(){var p=document.getElementById('assistant-panel');" +
+            "if(p && p.style.display!=='none'){toggleAssistant();return 'close';}" +
+            "return 'none';})()",
+            value -> {
+                if ("close".equals(value)) return;            // 关掉了助手，留在App内
+                if (webView.canGoBack()) webView.goBack();
+                else super.onBackPressed();
+            });
     }
 }
