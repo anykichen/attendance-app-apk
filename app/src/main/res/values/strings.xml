@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">考勤助手</string>
+    <!-- 服务器地址：手机与服务器在同一办公室WiFi时填写内网IP；改地址只需改这里后重新打包 -->
+    <string name="web_url">http://10.201.2.31:8083</string>
+</resources>
