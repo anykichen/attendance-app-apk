@@ -5,6 +5,9 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+env:
+  ANDROID_HOME: /opt/android-sdk
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,16 +21,24 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Install Android SDK (cmdline-tools)
+        run: |
+          mkdir -p $ANDROID_HOME/cmdline-tools
+          curl -fsSL -o ct.zip https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          unzip -q ct.zip -d $ANDROID_HOME/cmdline-tools
+          mv $ANDROID_HOME/cmdline-tools/cmdline-tools $ANDROID_HOME/cmdline-tools/latest
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses >/dev/null
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-33" "build-tools;33.0.1"
 
-      - name: Install SDK packages
-        run: $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-33" "build-tools;33.0.1"
+      - name: Generate Gradle wrapper
+        uses: gradle/gradle-build-action@v3
+        with:
+          gradle-version: '7.5'
+          arguments: wrapper --gradle-version 7.5
 
       - name: Build debug APK
         uses: gradle/gradle-build-action@v3
         with:
-          gradle-version: '7.5'
           arguments: assembleDebug
 
       - name: Upload APK
